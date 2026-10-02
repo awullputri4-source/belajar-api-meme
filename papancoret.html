@@ -1,0 +1,69 @@
+<div class="module">
+    <span class="tag">canvas API + mouse events</span>
+    <h3>Papan Coret</h3>
+    <p class="desc">Menggambar itu sebenarnya cuma menyambung banyak garis pendek setiap posisi kursor bergerak selagi tombol mouse ditekan.</p>
+    <div class="demo">
+      <div class="canvas-tools">
+        <input type="color" id="doodleColor" value="#e3b23c">
+        <input type="range" id="doodleSize" min="1" max="50" value="4">
+        <button class="ghost" id="doodleClear">Bersihkan</button>
+      </div>
+      <canvas id="doodle"></canvas>
+    </div>
+    <details class="code-reveal">
+      <summary>Lihat kode</summary>
+      <pre><code>const ctx = doodle.getContext("2d");
+let menggambar = false;
+
+<script> const doodle = document.getElementById("doodle");
+  const doodleColor = document.getElementById("doodleColor");
+  const doodleSize = document.getElementById("doodleSize");
+  const doodleClear = document.getElementById("doodleClear");
+  const ctx = doodle.getContext("2d");
+  let menggambar = false;
+
+  function ukurCanvas() {
+    const rect = doodle.getBoundingClientRect();
+    doodle.width = rect.width;
+    doodle.height = rect.height;
+  }
+  window.addEventListener("resize", ukurCanvas);
+  ukurCanvas();
+
+  function posisi(e) {
+    const rect = doodle.getBoundingClientRect();
+    const titik = e.touches ? e.touches[0] : e;
+    return { x: titik.clientX - rect.left, y: titik.clientY - rect.top };
+  }
+
+  function mulai(e) {
+    menggambar = true;
+    const { x, y } = posisi(e);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  }
+
+  function gambar(e) {
+    if (!menggambar) return;
+    e.preventDefault();
+    const { x, y } = posisi(e);
+    ctx.strokeStyle = doodleColor.value;
+    ctx.lineWidth = doodleSize.value;
+    ctx.lineCap = "round";
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  }
+
+  function selesai() { menggambar = false; }
+
+  doodle.addEventListener("mousedown", mulai);
+  doodle.addEventListener("mousemove", gambar);
+  window.addEventListener("mouseup", selesai);
+  doodle.addEventListener("touchstart", mulai);
+  doodle.addEventListener("touchmove", gambar);
+  window.addEventListener("touchend", selesai);
+
+  doodleClear.addEventListener("click", () => {
+    ctx.clearRect(0, 0, doodle.width, doodle.height);
+  });
+</script>

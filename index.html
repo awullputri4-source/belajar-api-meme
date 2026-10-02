@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bengkel Interaktif — Belajar HTML, CSS, JS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ===========================================================
+     TOKEN WARNA & TIPOGRAFI
+     Ganti nilai di :root ini untuk mengubah tampilan seluruh situs.
+     =========================================================== */
+  :root{
+    --bg: #14171c;
+    --bg-card: #1b1f27;
+    --bg-card-alt: #20242e;
+    --text: #e7e3d8;
+    --text-dim: #9aa0ac;
+    --accent: #e3b23c;
+    --accent-2: #4fa98d;
+    --danger: #d96c6c;
+    --border: #2b303b;
+    --radius: 10px;
+    --font-head: 'Space Grotesk', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  /* Tema alternatif — dipakai oleh modul "Ganti Tema" di bawah */
+  [data-theme="hutan"]{
+    --bg: #10160f; --bg-card: #161f14; --bg-card-alt: #1b2618;
+    --accent: #7bbf5e; --accent-2: #d9a441; --border: #26331f;
+  }
+  [data-theme="laut"]{
+    --bg: #0c151c; --bg-card: #101f29; --bg-card-alt: #142936;
+    --accent: #4fc3d9; --accent-2: #e3b23c; --border: #1c2f3c;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    transition: background .3s ease, color .3s ease;
+  }
+
+  ::selection{ background: var(--accent); color: #14171c; }
+
+  .wrap{
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 24px 96px;
+  }
+
+  a{ color: var(--accent-2); }
+
+  h1, h2, h3{ font-family: var(--font-head); font-weight: 600; margin: 0 0 12px; letter-spacing: -0.01em; }
+
+  /* ===========================================================
+     HERO
+     =========================================================== */
+  header.hero{
+    padding: 72px 0 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  header.hero h1{
+    font-size: clamp(2rem, 5vw, 2.9rem);
+    line-height: 1.1;
+  }
+  header.hero p.lede{
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    max-width: 60ch;
+    margin: 0 0 32px;
+  }
+
+  .live-box{
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .live-box label{
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .live-box input[type="text"]{
+    width: 100%;
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 10px 12px;
+    border-radius: 8px;
+    outline: none;
+  }
+  .live-box input[type="text"]:focus{ border-color: var(--accent); }
+
+  .stat-row{
+    display: flex;
+    gap: 24px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .stat{ font-size: 0.9rem; color: var(--text-dim); }
+  .stat b{ color: var(--accent); font-family: var(--font-mono); display: block; font-size: 1.3rem; }
+  #liveReversed{ font-family: var(--font-mono); color: var(--accent-2); }
+
+  /* ===========================================================
+     BAGIAN MODUL
+     =========================================================== */
+  section.intro{ padding: 40px 0 8px; }
+  section.intro p{ color: var(--text-dim); max-width: 62ch; }
+
+  .module{
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin: 24px 0;
+  }
+  .module h3{ font-size: 1.15rem; }
+  .module .tag{
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+  .module p.desc{ color: var(--text-dim); font-size: 0.92rem; margin-bottom: 18px; }
+
+  .demo{
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+  }
+
+  button{
+    font-family: var(--font-body);
+    font-weight: 500;
+    background: var(--accent);
+    color: #14171c;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  button:hover{ filter: brightness(1.08); }
+  button.ghost{
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  button.ghost:hover{ border-color: var(--accent); color: var(--accent); }
+
+  details.code-reveal{
+    margin-top: 14px;
+    border-top: 1px dashed var(--border);
+    padding-top: 10px;
+  }
+  details.code-reveal summary{
+    cursor: pointer;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    user-select: none;
+  }
+  details.code-reveal summary:hover{ color: var(--accent); }
+  details.code-reveal pre{
+    background: #0e1116;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    overflow-x: auto;
+    margin-top: 10px;
+  }
+  details.code-reveal code{
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: #cfd6e0;
+    line-height: 1.55;
+    white-space: pre;
+  }
+  /* sedikit highlight kasar untuk komentar kode */
+  details.code-reveal code .cm{ color: #6c7684; font-style: italic; }
+
+  /* --- Todo list --- */
+  #todoForm{ display: flex; gap: 8px; margin-bottom: 14px; }
+  #todoInput{
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 9px 12px;
+    border-radius: 7px;
+    font-family: var(--font-body);
+  }
+  #todoList{ list-style: none; margin: 0; padding: 0; }
+  #todoList li{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  #todoList li:last-child{ border-bottom: none; }
+  #todoList li.done span{ text-decoration: line-through; color: var(--text-dim); }
+  #todoList li span{ flex: 1; cursor: pointer; }
+  #todoList li button{ background: transparent; color: var(--danger); border: none; font-size: 1rem; padding: 2px 6px; }
+  #todoEmpty{ color: var(--text-dim); font-size: 0.88rem; }
+
+  /* --- Ganti tema --- */
+  .theme-btns{ display: flex; gap: 10px; flex-wrap: wrap; }
+  .theme-btns button.active{ outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* --- Accordion --- */
+  .acc-item{ border-bottom: 1px solid var(--border); }
+  .acc-item:last-child{ border-bottom: none; }
+  .acc-toggle{
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    color: var(--text);
+    border: none;
+    padding: 12px 4px;
+    font-size: 0.95rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+  .acc-toggle .plus{ color: var(--accent); font-family: var(--font-mono); }
+  .acc-panel{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .25s ease;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+  .acc-panel p{ margin: 0 0 12px 4px; }
+
+  /* --- Canvas --- */
+  .canvas-tools{ display: flex; gap: 12px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+  .canvas-tools input[type="color"]{
+    width: 36px; height: 36px; border: none; background: none; cursor: pointer; padding: 0;
+  }
+  .canvas-tools input[type="range"]{ accent-color: var(--accent); }
+  #doodle{
+    background: #0e1116;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 100%;
+    height: 260px;
+    touch-action: none;
+    cursor: crosshair;
+  }
+
+  /* --- Rating bintang --- */
+  .stars{ font-size: 1.8rem; letter-spacing: 4px; }
+  .stars button{
+    background: none;
+    border: none;
+    color: var(--border);
+    padding: 0;
+    font-size: inherit;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .stars button.filled{ color: var(--accent); }
+  #ratingText{ color: var(--text-dim); font-size: 0.88rem; margin-top: 10px; }
+
+  /* --- Form validasi --- */
+  .field{ margin-bottom: 14px; }
+  .field label{ display: block; font-size: 0.85rem; color: var(--text-dim); margin-bottom: 6px; }
+  .field input{
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 9px 12px;
+    border-radius: 7px;
+    font-family: var(--font-body);
+    outline: none;
+  }
+  .field input.ok{ border-color: var(--accent-2); }
+  .field input.bad{ border-color: var(--danger); }
+  .field .msg{ font-size: 0.78rem; margin-top: 5px; color: var(--text-dim); }
+  .field .msg.ok{ color: var(--accent-2); }
+  .field .msg.bad{ color: var(--danger); }
+  .strength-bar{ height: 5px; border-radius: 3px; background: var(--border); margin-top: 8px; overflow: hidden; }
+  .strength-fill{ height: 100%; width: 0%; background: var(--danger); transition: width .2s, background .2s; }
+
+  footer{
+    border-top: 1px solid var(--border);
+    padding-top: 32px;
+    margin-top: 40px;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+  footer h2{ font-size: 1.1rem; color: var(--text); }
+  footer ul{ padding-left: 20px; }
+  footer li{ margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="hero">
+    <h1>Bengkel Interaktif</h1>
+    <p class="lede">Situs kecil ini isinya contoh-contoh nyata pemakaian HTML, CSS, dan JavaScript. Tiap modul di bawah punya tombol <strong>"Lihat kode"</strong> — buka, baca komentarnya, lalu coba ubah sendiri lewat DevTools atau salin ke file kamu.</p>
+
+    <div class="live-box">
+      <label for="liveInput">Coba ketik sesuatu di sini (demo event "input"):</label>
+      <input type="text" id="liveInput" placeholder="Ketik nama kamu, misalnya...">
+      <div class="stat-row">
+        <div class="stat">Karakter<b id="liveChars">0</b></div>
+        <div class="stat">Kata<b id="liveWords">0</b></div>
+        <div class="stat">Dibalik<b id="liveReversed">—</b></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="intro">
+    <p>Semua kode di bawah ada di dalam <em>satu file HTML</em> ini — CSS di dalam tag <code>&lt;style&gt;</code>, JavaScript di dalam tag <code>&lt;script&gt;</code>. Ini pola yang bagus untuk belajar karena kamu bisa lihat langsung hubungan antara markup, gaya, dan perilaku tanpa pindah-pindah file.</p>
+  </section>
+
+  <!-- ================= MODUL 1: TODO LIST ================= -->
+  <div class="module">
+    <span class="tag">array + render()</span>
+    <h3>Daftar Tugas</h3>
+    <p class="desc">Pola paling umum di JS: simpan data di array, lalu tulis ulang tampilan setiap kali data berubah.</p>
+    <div class="demo">
+      <form id="todoForm">
+        <input type="text" id="todoInput" placeholder="Tulis tugas baru..." autocomplete="off">
+        <button type="submit">Tambah</button>
+      </form>
+      <ul id="todoList"></ul>
+      <p id="todoEmpty">Belum ada tugas. Coba tambah satu.</p>
+    </div>
+    <details class="code-reveal">
+      <summary>Lihat kode</summary>
+      <pre><code>&lt;span class="cm">// Data disimpan sebagai array of object, bukan langsung di HTML&lt;/span&gt;
+let tugas = [];
+
+function renderTugas() {
+  todoList.innerHTML = ""; &lt;span class="cm">// kosongkan dulu, lalu gambar ulang&lt;/span&gt;
+  todoEmpty.style.display = tugas.length ? "none" : "block";
+
+  tugas.forEach((item) => {
+    const li = document.createElement("li");
+    if (item.done) li.classList.add("done");
+
+    const span = document.createElement("span");
+    span.textContent = item.text;
+    span.onclick = () => { &lt;span class="cm">// klik teks = toggle selesai&lt;/span&gt;
+      item.done = !item.done;
+      renderTugas();
+    };
+
+    const hapus = document.createElement("button");
+    hapus.textContent = "✕";
+    hapus.onclick = () => {
+      tugas = tugas.filter((t) => t.id !== item.id);
+      renderTugas();
+    };
+
+    li.append(span, hapus);
+    todoList.appendChild(li);
+  });
+}
+
+todoForm.addEventListener("submit", (e) => {
+  e.preventDefault(); &lt;span class="cm">// cegah form reload halaman&lt;/span&gt;
+  const teks = todoInput.value.trim();
+  if (!teks) return;
+  tugas.push({ id: Date.now(), text: teks, done: false });
+  todoInput.value = "";
+  renderTugas();
+});</code></pre>
+    </details>
+  </div>
+
+  <!-- ================= MODUL 2: GANTI TEMA ================= -->
+  <div class="module">
+    <span class="tag">CSS custom properties</span>
+    <h3>Ganti Tema</h3>
+    <p class="desc">Warna di situs ini diatur lewat variabel CSS (<code>--accent</code>, <code>--bg</code>, dst). Ganti atribut <code>data-theme</code> di <code>&lt;body&gt;</code>, dan seluruh palet warna ikut berubah — tanpa sentuh elemen satu-satu.</p>
+    <div class="demo">
+      <div class="theme-btns">
+        <button class="ghost active" data-theme-btn="default">Malam (default)</button>
+        <button class="ghost" data-theme-btn="hutan">Hutan</button>
+        <button class="ghost" data-theme-btn="laut">Laut</button>
+      </div>
+    </div>
+    <details class="code-reveal">
+      <summary>Lihat kode</summary>
+      <pre><code>&lt;span class="cm">/* Di CSS: definisikan ulang variabel untuk tiap tema */&lt;/span&gt;
+[data-theme="hutan"] {
+  --bg: #10160f;
+  --accent: #7bbf5e;
+  /* ...dst */
+}
+
+&lt;span class="cm">// Di JS: cukup ganti satu atribut di elemen &lt;body&gt;&lt;/span&gt;
+document.querySelectorAll("[data-theme-btn]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const nama = btn.dataset.themeBtn;
+    document.body.setAttribute(
+      "data-theme",
+      nama === "default" ? "" : nama
+    );
+    &lt;span class="cm">// tandai tombol yang aktif&lt;/span&gt;
+    document.querySelectorAll("[data-theme-btn]")
+      .forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+  });
+});</code></pre>
+    </details>
+  </div>
+
+  <!-- ================= MODUL 3: ACCORDION ================= -->
+  <div class="module">
+    <span class="tag">classList + aria</span>
+    <h3>Accordion FAQ</h3>
+    <p class="desc">Trik animasi tinggi yang "tidak diketahui" (auto) dengan CSS: transisi <code>max-height</code> ke nilai <code>scrollHeight</code> asli konten.</p>
+    <div class="demo">
+      <div class="acc-item">
+        <button class="acc-toggle" aria-expanded="false">
+          <span>Kenapa pakai satu file HTML saja?</span><span class="plus">+</span>
+        </button>
+        <div class="acc-panel"><p>Supaya gampang dibaca dari atas ke bawah saat belajar. Di proyek nyata, HTML/CSS/JS biasanya dipisah ke file berbeda.</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-toggle" aria-expanded="false">
+          <span>Apa itu event delegation?</span><span class="plus">+</span>
+        </button>
+        <div class="acc-panel"><p>Pola memasang satu event listener di elemen induk, lalu memeriksa <code>event.target</code> untuk tahu elemen anak mana yang diklik — lebih hemat daripada pasang listener di tiap anak.</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-toggle" aria-expanded="false">
+          <span>Boleh salin kode ini ke proyek saya?</span><span class="plus">+</span>
+        </button>
+        <div class="acc-panel"><p>Boleh banget. Silakan ambil bagian mana pun, ganti nama variabel dan gaya sesuai proyekmu.</p></div>
+      </div>
+    </div>
+    <details class="code-reveal">
+      <summary>Lihat kode</summary>
+      <pre><code>document.querySelectorAll(".acc-toggle").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const panel = btn.nextElementSibling;
+    const buka = btn.getAttribute("aria-expanded") === "true";
+
+    btn.setAttribute("aria-expanded", String(!buka));
+    panel.style.maxHeight = buka ? null : panel.scrollHeight + "px";
+    btn.querySelector(".plus").textContent = buka ? "+" : "−";
+  });
+});</code></pre>
+    </details>
+  </div>
+
+  <!-- ================= MODUL 4: CANVAS ================= -->
+  <div class="module">
+    <span class="tag">canvas API + mouse events</span>
+    <h3>Papan Coret</h3>
+    <p class="desc">Menggambar itu sebenarnya cuma menyambung banyak garis pendek setiap posisi kursor bergerak selagi tombol mouse ditekan.</p>
+    <div class="demo">
+      <div class="canvas-tools">
+        <input type="color" id="doodleColor" value="#e3b23c">
+        <input type="range" id="doodleSize" min="1" max="20" value="4">
+        <button class="ghost" id="doodleClear">Bersihkan</button>
+      </div>
+      <canvas id="doodle"></canvas>
+    </div>
+    <details class="code-reveal">
+      <summary>Lihat kode</summary>
+      <pre><code>const ctx = doodle.getContext("2d");
+let menggambar = false;
+
+function posisi(e) {
+  const rect = doodle.getBoundingClientRect();
+  const titik = e.touches ? e.touches[0] : e;
+  return { x: titik.clientX - rect.left, y: titik.clientY - rect.top };
+}
+
+function mulai(e) {
+  menggambar = true;
+  const { x, y } = posisi(e);
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+}
+
+function gambar(e) {
+  if (!menggambar) return;
+  const { x, y } = posisi(e);
+  ctx.strokeStyle = doodleColor.value;
+  ctx.lineWidth = doodleSize.value;
+  ctx.lineCap = "round";
+  ctx.lineTo(x, y);
+  ctx.stroke();
+}
+
+function selesai() { menggambar = false; }
+
+doodle.addEventListener("mousedown", mulai);
+doodle.addEventListener("mousemove", gambar);
+window.addEventListener("mouseup", selesai);
+
+doodleClear.addEventListener("click", () => {
+  ctx.clearRect(0, 0, doodle.width, doodle.height);
+});</code></pre>
+    </details>
+  </div>
+
+  <!-- ================= MODUL 5: RATING BINTANG ================= -->
+  <div class="module">
+    <span class="tag">event hover + click</span>
+    <h3>Rating Bintang</h3>
+    <p class="desc">Kombinasi <code>mouseover</code> untuk pratinjau dan <code>click</code> untuk menetapkan nilai — pola yang sama dipakai di rating produk e-commerce.</p>
+    <div class="demo">
+      <div class="stars" id="stars"></div>
+      <p id="ratingText">Arahkan kursor lalu klik untuk memberi nilai.</p>
+    </div>
+    <details class="code-reveal">
+      <summary>Lihat kode</summary>
+      <pre><code>let nilai = 0;
+const jumlahBintang = 5;
+
+for (let i = 1; i <= jumlahBintang; i++) {
+  const btn = document.createElement("button");
+  btn.textContent = "★";
+  btn.dataset.nilai = i;
+
+  btn.addEventListener("mouseenter", () => tandai(i));
+  btn.addEventListener("mouseleave", () => tandai(nilai));
+  btn.addEventListener("click", () => {
+    nilai = i;
+    ratingText.textContent = `Kamu memberi ${nilai} dari 5 bintang.`;
+  });
+
+  stars.appendChild(btn);
+}
+
+function tandai(sampai) {
+  [...stars.children].forEach((btn, idx) => {
+    btn.classList.toggle("filled", idx < sampai);
+  });
+}</code></pre>
+    </details>
+  </div>
+
+  <!-- ================= MODUL 6: VALIDASI FORM ================= -->
+  <div class="module">
+    <span class="tag">regex + validasi langsung</span>
+    <h3>Validasi Form</h3>
+    <p class="desc">Umpan balik yang muncul sambil mengetik (bukan setelah submit) bikin form terasa lebih responsif. Ini dasar dari validasi di hampir semua form modern.</p>
+    <div class="demo">
+      <div class="field">
+        <label for="emailInput">Email</label>
+        <input type="text" id="emailInput" placeholder="nama@contoh.com" autocomplete="off">
+        <div class="msg" id="emailMsg"></div>
+      </div>
+      <div class="field">
+        <label for="passInput">Kata sandi</label>
+        <input type="password" id="passInput" placeholder="Minimal 8 karakter" autocomplete="off">
+        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+        <div class="msg" id="passMsg"></div>
+      </div>
+    </div>
+    <details class="code-reveal">
+      <summary>Lihat kode</summary>
+      <pre><code>const polaEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+emailInput.addEventListener("input", () => {
+  const valid = polaEmail.test(emailInput.value);
+  emailInput.classList.toggle("ok", valid && emailInput.value !== "");
+  emailInput.classList.toggle("bad", !valid && emailInput.value !== "");
+  emailMsg.textContent = emailInput.value === ""
+    ? ""
+    : (valid ? "Format email valid." : "Format email belum benar.");
+  emailMsg.className = "msg " + (valid ? "ok" : "bad");
+});
+
+passInput.addEventListener("input", () => {
+  const v = passInput.value;
+  let skor = 0;
+  if (v.length >= 8) skor++;
+  if (/[A-Z]/.test(v)) skor++;
+  if (/[0-9]/.test(v)) skor++;
+  if (/[^A-Za-z0-9]/.test(v)) skor++;
+
+  const persen = (skor / 4) * 100;
+  strengthFill.style.width = persen + "%";
+  strengthFill.style.background =
+    skor <= 1 ? "var(--danger)" : skor <= 3 ? "var(--accent)" : "var(--accent-2)";
+
+  const label = ["Sangat lemah", "Lemah", "Cukup", "Kuat", "Sangat kuat"][skor];
+  passMsg.textContent = v === "" ? "" : label;
+});</code></pre>
+    </details>
+  </div>
+
+  <footer>
+    <h2>Ide buat kamu otak-atik</h2>
+    <ul>
+      <li>Ganti nilai <code>--accent</code> di bagian atas CSS, lihat efeknya ke semua modul sekaligus.</li>
+      <li>Tambah tema keempat: salin blok <code>[data-theme="laut"]</code>, ganti namanya dan warnanya, lalu tambah tombolnya di HTML.</li>
+      <li>Di modul Daftar Tugas, tambahkan fitur "hapus semua yang selesai".</li>
+      <li>Di Papan Coret, tambahkan tombol untuk mengunduh gambar (petunjuk: <code>canvas.toDataURL()</code>).</li>
+      <li>Di Rating Bintang, ganti bintang jadi emoji lain dan lihat apakah animasinya masih masuk akal.</li>
+    </ul>
+  </footer>
+
+</div>
+
+<script>
+  /* ===========================================================
+     HERO: transformasi teks langsung
+     =========================================================== */
+  const liveInput = document.getElementById("liveInput");
+  const liveChars = document.getElementById("liveChars");
+  const liveWords = document.getElementById("liveWords");
+  const liveReversed = document.getElementById("liveReversed");
+
+  liveInput.addEventListener("input", () => {
+    const teks = liveInput.value;
+    liveChars.textContent = teks.length;
+    liveWords.textContent = teks.trim() === "" ? 0 : teks.trim().split(/\s+/).length;
+    liveReversed.textContent = teks === "" ? "—" : teks.split("").reverse().join("");
+  });
+
+  /* ===========================================================
+     MODUL 1: Daftar Tugas
+     =========================================================== */
+  const todoForm = document.getElementById("todoForm");
+  const todoInput = document.getElementById("todoInput");
+  const todoList = document.getElementById("todoList");
+  const todoEmpty = document.getElementById("todoEmpty");
+
+  let tugas = [];
+
+  function renderTugas() {
+    todoList.innerHTML = "";
+    todoEmpty.style.display = tugas.length ? "none" : "block";
+
+    tugas.forEach((item) => {
+      const li = document.createElement("li");
+      if (item.done) li.classList.add("done");
+
+      const span = document.createElement("span");
+      span.textContent = item.text;
+      span.onclick = () => {
+        item.done = !item.done;
+        renderTugas();
+      };
+
+      const hapus = document.createElement("button");
+      hapus.textContent = "\u2715";
+      hapus.onclick = () => {
+        tugas = tugas.filter((t) => t.id !== item.id);
+        renderTugas();
+      };
+
+      li.append(span, hapus);
+      todoList.appendChild(li);
+    });
+  }
+
+  todoForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const teks = todoInput.value.trim();
+    if (!teks) return;
+    tugas.push({ id: Date.now(), text: teks, done: false });
+    todoInput.value = "";
+    renderTugas();
+  });
+
+  renderTugas();
+
+  /* ===========================================================
+     MODUL 2: Ganti Tema
+     =========================================================== */
+  document.querySelectorAll("[data-theme-btn]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const nama = btn.dataset.themeBtn;
+      if (nama === "default") {
+        document.body.removeAttribute("data-theme");
+      } else {
+        document.body.setAttribute("data-theme", nama);
+      }
+      document.querySelectorAll("[data-theme-btn]").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  });
+
+  /* ===========================================================
+     MODUL 3: Accordion
+     =========================================================== */
+  document.querySelectorAll(".acc-toggle").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const panel = btn.nextElementSibling;
+      const buka = btn.getAttribute("aria-expanded") === "true";
+
+      btn.setAttribute("aria-expanded", String(!buka));
+      panel.style.maxHeight = buka ? null : panel.scrollHeight + "px";
+      btn.querySelector(".plus").textContent = buka ? "+" : "\u2212";
+    });
+  });
+
+  /* ===========================================================
+     MODUL 4: Papan Coret (Canvas)
+     =========================================================== */
+  const doodle = document.getElementById("doodle");
+  const doodleColor = document.getElementById("doodleColor");
+  const doodleSize = document.getElementById("doodleSize");
+  const doodleClear = document.getElementById("doodleClear");
+  const ctx = doodle.getContext("2d");
+  let menggambar = false;
+
+  function ukurCanvas() {
+    const rect = doodle.getBoundingClientRect();
+    doodle.width = rect.width;
+    doodle.height = rect.height;
+  }
+  window.addEventListener("resize", ukurCanvas);
+  ukurCanvas();
+
+  function posisi(e) {
+    const rect = doodle.getBoundingClientRect();
+    const titik = e.touches ? e.touches[0] : e;
+    return { x: titik.clientX - rect.left, y: titik.clientY - rect.top };
+  }
+
+  function mulai(e) {
+    menggambar = true;
+    const { x, y } = posisi(e);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  }
+
+  function gambar(e) {
+    if (!menggambar) return;
+    e.preventDefault();
+    const { x, y } = posisi(e);
+    ctx.strokeStyle = doodleColor.value;
+    ctx.lineWidth = doodleSize.value;
+    ctx.lineCap = "round";
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  }
+
+  function selesai() { menggambar = false; }
+
+  doodle.addEventListener("mousedown", mulai);
+  doodle.addEventListener("mousemove", gambar);
+  window.addEventListener("mouseup", selesai);
+  doodle.addEventListener("touchstart", mulai);
+  doodle.addEventListener("touchmove", gambar);
+  window.addEventListener("touchend", selesai);
+
+  doodleClear.addEventListener("click", () => {
+    ctx.clearRect(0, 0, doodle.width, doodle.height);
+  });
+
+  /* ===========================================================
+     MODUL 5: Rating Bintang
+     =========================================================== */
+  const starsWrap = document.getElementById("stars");
+  const ratingText = document.getElementById("ratingText");
+  let nilaiRating = 0;
+  const jumlahBintang = 5;
+
+  for (let i = 1; i <= jumlahBintang; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = "\u2605";
+    btn.dataset.nilai = i;
+
+    btn.addEventListener("mouseenter", () => tandaiBintang(i));
+    btn.addEventListener("mouseleave", () => tandaiBintang(nilaiRating));
+    btn.addEventListener("click", () => {
+      nilaiRating = i;
+      ratingText.textContent = "Kamu memberi " + nilaiRating + " dari 5 bintang.";
+    });
+
+    starsWrap.appendChild(btn);
+  }
+
+  function tandaiBintang(sampai) {
+    [...starsWrap.children].forEach((btn, idx) => {
+      btn.classList.toggle("filled", idx < sampai);
+    });
+  }
+
+  /* ===========================================================
+     MODUL 6: Validasi Form
+     =========================================================== */
+  const emailInput = document.getElementById("emailInput");
+  const emailMsg = document.getElementById("emailMsg");
+  const passInput = document.getElementById("passInput");
+  const passMsg = document.getElementById("passMsg");
+  const strengthFill = document.getElementById("strengthFill");
+
+  const polaEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  emailInput.addEventListener("input", () => {
+    const valid = polaEmail.test(emailInput.value);
+    const kosong = emailInput.value === "";
+    emailInput.classList.toggle("ok", valid && !kosong);
+    emailInput.classList.toggle("bad", !valid && !kosong);
+    emailMsg.textContent = kosong ? "" : (valid ? "Format email valid." : "Format email belum benar.");
+    emailMsg.className = "msg " + (valid ? "ok" : "bad");
+  });
+
+  passInput.addEventListener("input", () => {
+    const v = passInput.value;
+    let skor = 0;
+    if (v.length >= 8) skor++;
+    if (/[A-Z]/.test(v)) skor++;
+    if (/[0-9]/.test(v)) skor++;
+    if (/[^A-Za-z0-9]/.test(v)) skor++;
+
+    const persen = (skor / 4) * 100;
+    strengthFill.style.width = persen + "%";
+    strengthFill.style.background =
+      skor <= 1 ? "var(--danger)" : skor <= 3 ? "var(--accent)" : "var(--accent-2)";
+
+    const label = ["Sangat lemah", "Lemah", "Cukup", "Kuat", "Sangat kuat"][skor];
+    passMsg.textContent = v === "" ? "" : label;
+  });
+</script>
+
+</body>
+</html>
